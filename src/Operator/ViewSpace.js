@@ -7,6 +7,9 @@ import { db } from "../config/firebase";
 import { collection, getDocs, query, where, serverTimestamp,addDoc, setDoc} from 'firebase/firestore';
 import SearchForm from './SearchForm';
 import UserContext from '../UserContext';
+import { useNavigate } from 'react-router-dom';
+
+
 
 
 const ParkingSlot = () => {
@@ -61,9 +64,12 @@ const ParkingSlot = () => {
       console.error('Error:', error);
     }
   };
-  
+  const navigate = useNavigate();
 
-  
+  const handleButtonClick = () => {
+    navigate("/reservation");
+  };
+
 
   const rows = 5;
   const cols = 3;
@@ -358,6 +364,9 @@ const ParkingSlot = () => {
         </Button>
       </Modal.Footer>
     </Modal>
+
+
+
       <div style={{textAlign: 'center', fontFamily:'Georgina', fontSize:'15px', marginTop:'10px'}}>
           <span>  Total Parking Spaces: {initialTotalSpaces}</span>
           <br />

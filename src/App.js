@@ -12,6 +12,7 @@ import OperatorProfile from "./Operator/OperatorProfile"
 import AgentSchedule from "./components/AgentSchedule"
 import TicketInfo from "./components/TicketInfo"
 import UserProvider from "./UserProvider";
+import reservation from "./Operator/reservation"
 
 
 
@@ -35,6 +36,7 @@ function App() {
           <Route path="OperatorProfile" element={<OperatorProfile/>} />
           <Route path="AgentSchedule" element={<AgentSchedule/>} />
           <Route path="TicketInfo" element={<TicketInfo/>} />
+          <Route path="reservation" element={<reservation/>} />
         </Routes>
       </Router>
       </UserProvider>
