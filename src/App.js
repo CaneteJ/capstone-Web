@@ -11,8 +11,9 @@ import ForgetPassword from "./components/ForgetPassword"
 import OperatorProfile from "./Operator/OperatorProfile"
 import AgentSchedule from "./components/AgentSchedule"
 import TicketInfo from "./components/TicketInfo"
-import UserProvider from "./UserProvider";
 import reservation from "./Operator/reservation"
+import UserProvider from "./UserProvider";
+
 
 
 

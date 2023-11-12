@@ -367,6 +367,7 @@ const ParkingSlot = () => {
 
 
 
+
       <div style={{textAlign: 'center', fontFamily:'Georgina', fontSize:'15px', marginTop:'10px'}}>
           <span>  Total Parking Spaces: {initialTotalSpaces}</span>
           <br />
