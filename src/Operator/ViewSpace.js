@@ -67,9 +67,10 @@ const ParkingSlot = () => {
   const navigate = useNavigate();
 
   const handleButtonClick = () => {
-    navigate("/reservation");
-  };
+  navigate("/reservation");
+ };
 
+  
 
   const rows = 5;
   const cols = 3;
@@ -365,9 +366,10 @@ const ParkingSlot = () => {
       </Modal.Footer>
     </Modal>
 
-
-
-
+    <div style={{ textAlign: 'center', marginTop: '10px' }}>
+      <Button onClick={handleButtonClick}>Manage Reservation</Button>
+    </div>
+    
       <div style={{textAlign: 'center', fontFamily:'Georgina', fontSize:'15px', marginTop:'10px'}}>
           <span>  Total Parking Spaces: {initialTotalSpaces}</span>
           <br />
