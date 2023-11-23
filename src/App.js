@@ -12,7 +12,7 @@ import OperatorProfile from "./Operator/OperatorProfile"
 import AgentSchedule from "./components/AgentSchedule"
 import TicketInfo from "./components/TicketInfo"
 import UserProvider from "./UserProvider";
-import createReservationInterface from "./Operator/reservation"
+import ReservationInterface from "./Operator/reservation"
 
 
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
@@ -23,8 +23,10 @@ function App() {
       <Router>
         <Routes>
           <Route path="/" element={<Login />} />
+          
           <Route path="Create" element={<Create />} />
           <Route path="Dashboard" element={<Dashboard />} />
+          <Route path="/reservation" element={<ReservationInterface/>}/>
           <Route path="OperatorDashboard" element={<OperatorDashboard />} />
           <Route path="ViewSpace" element={<ViewSpace/>} />
           <Route path="AgentRegistration" element={<AgentRegistration/>} />
@@ -35,7 +37,7 @@ function App() {
           <Route path="OperatorProfile" element={<OperatorProfile/>} />
           <Route path="AgentSchedule" element={<AgentSchedule/>} />
           <Route path="TicketInfo" element={<TicketInfo/>} />
-          <Route path="reservation" element={<createReservationInterface/>}/>
+          
         </Routes>
       </Router>
       </UserProvider>

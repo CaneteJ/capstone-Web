@@ -1,166 +1,112 @@
-// Function to create a button
-const createButton = (text, clickHandler) => {
-  const button = document.createElement('button');
-  button.classList.add('btn', 'btn-primary', 'mt-2');
-  button.textContent = text;
-  button.addEventListener('click', clickHandler);
-  return button;
-};
+import React, { useState, useEffect } from 'react';
 
-// Function to handle reservation (accept or decline) and update history log
-const handleReservation = (accepted, name, plateNumber, floor, slot, requestContainer, timeOfRequest) => {
-  const status = accepted ? 'Accepted' : 'Declined';
-
-  // Update history log
-  const logEntry = document.createElement('div');
-  logEntry.classList.add('alert', 'alert-primary', 'mt-2');
-  logEntry.innerHTML = `<strong>${status}:</strong> ${name} requested a reservation on ${timeOfRequest}. Plate Number: ${plateNumber}, Floor: ${floor}, Slot: ${slot}`;
-  historyLog.appendChild(logEntry);
-
-  // Remove details and buttons group
-  requestContainer.style.display = 'none';
-
-  alert(`Reservation ${status}:\n\nName: ${name}\nPlate Number: ${plateNumber}\nFloor Number: ${floor}\nSlot Number: ${slot}`);
-};
-
-// Function to create a reservation request
-const createReservationRequest = (request) => {
-  const requestContainer = document.createElement('div');
-  requestContainer.classList.add('reservation-request', 'mb-4', 'border', 'p-3', 'rounded');
-
-  const nameLabel = document.createElement('h4');
-  nameLabel.classList.add('mb-0');
-  nameLabel.textContent = `Name: ${request.name}`;
-
-  const timeLabel = document.createElement('p');
-  timeLabel.classList.add('text-muted', 'mb-2');
-  timeLabel.textContent = `Time of Request: ${request.timeOfRequest}`;
-
-  const plateLabel = document.createElement('p');
-  plateLabel.textContent = `Plate Number: ${request.plateNumber}`;
-
-  const floorLabel = document.createElement('p');
-  floorLabel.textContent = `Floor Number: ${request.floor}`;
-
-  const slotLabel = document.createElement('p');
-  slotLabel.textContent = `Slot Number: ${request.slot}`;
-
-  requestContainer.appendChild(nameLabel);
-  requestContainer.appendChild(timeLabel);
-  requestContainer.appendChild(plateLabel);
-  requestContainer.appendChild(floorLabel);
-  requestContainer.appendChild(slotLabel);
-
-  const buttonContainer = document.createElement('div');
-  buttonContainer.classList.add('d-flex', 'flex-column', 'align-items-center', 'mt-2');
-
-  const acceptButton = createButton('Accept Reservation', () => handleReservation(true, request.name, request.plateNumber, request.floor, request.slot, requestContainer, request.timeOfRequest));
-  const declineButton = createButton('Decline Reservation', () => handleReservation(false, request.name, request.plateNumber, request.floor, request.slot, requestContainer, request.timeOfRequest));
-
-  buttonContainer.appendChild(acceptButton);
-  buttonContainer.appendChild(declineButton);
-
-  requestContainer.appendChild(buttonContainer);
-
-  // Add a line to separate each user's reservation request
-  const line = document.createElement('hr');
-  line.classList.add('my-2');
-  requestContainer.appendChild(line);
-
-  return requestContainer;
-};
-
-// Function to create navigation bar
-const createNavBar = () => {
-  const navBar = document.createElement('nav');
-  navBar.classList.add('navbar', 'navbar-expand-lg', 'navbar-dark', 'bg-dark');
-
- // Brand logo or name
- const homeLink = document.createElement('a');
- homeLink.classList.add('navbar-brand');
- homeLink.href = 'ViewSpace';
- homeLink.textContent = 'Parking Reservations';
-
- const navList = document.createElement('ul');
- navList.classList.add('navbar-nav', 'ml-auto');
-
- // Home link
- const homeItem = document.createElement('li');
- homeItem.classList.add('nav-item');
- homeItem.appendChild(homeLink);
- navList.appendChild(homeItem);
-
- navBar.appendChild(navList);
-
- return navBar;
-};
-
-
-// Create history log container
-const historyLog = document.createElement('div');
-historyLog.classList.add('history-log', 'mt-4', 'border', 'p-3', 'rounded');
-
-// Function to create enhanced reservation interface
-const createReservationInterface = () => {
-  // Create heading for Parking Reservation Management
-  const headingManagement = document.createElement('h2');
-  headingManagement.classList.add('card-title', 'mb-4', 'text-center');
-  headingManagement.textContent = 'Parking Reservation Management';
-
-  // Create container div
-  const container = document.createElement('div');
-  container.classList.add('container', 'mt-5', 'd-flex', 'flex-column', 'align-items-center', 'justify-content-center');
-
-// Create navigation bar using Bootstrap
-const navBar = createNavBar();
-document.head.innerHTML += `
-  <!-- Bootstrap CSS -->
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-`;
-document.body.appendChild(navBar);
-
-  // Create card div
-  const card = document.createElement('div');
-  card.classList.add('card', 'shadow', 'bg-white', 'rounded');
-
-  // Create card body
-  const cardBody = document.createElement('div');
-  cardBody.classList.add('card-body', 'd-flex', 'flex-column', 'align-items-center', 'overflow-auto');
-  // Set a fixed height for the container and make it scrollable
-  cardBody.style.height = '500px'; // Adjust the height as needed
-  cardBody.classList.add('overflow-auto');
-
-  // Append Parking Reservation Management heading to card body
-  cardBody.appendChild(headingManagement);
-
-  // Add sample reservation requests
-  const reservationRequests = [
+const ReservationInterface = () => {
+  // Load reservationRequests from localStorage on component mount
+  const storedReservationRequests = JSON.parse(localStorage.getItem('reservationRequests')) || [
     { name: 'John Doe', plateNumber: 'ABC123', floor: '2', slot: 'A3', timeOfRequest: '10:30 AM' },
     { name: 'Jane Smith', plateNumber: 'XYZ456', floor: '3', slot: 'B1', timeOfRequest: '11:45 AM' },
     { name: 'Alice Johnson', plateNumber: 'DEF789', floor: '1', slot: 'C2', timeOfRequest: '01:15 PM' },
-    // Add more reservation requests as needed
   ];
 
-  // Create elements for each reservation request
-  reservationRequests.forEach((request) => {
-    const requestContainer = createReservationRequest(request);
-    cardBody.appendChild(requestContainer);
-  });
+  const [reservationRequests, setReservationRequests] = useState(storedReservationRequests);
+  const [historyLog, setHistoryLog] = useState([]);
+  const [selectedReservation, setSelectedReservation] = useState(null);
 
-  // Create heading for Parking Reservation Details
-  const headingDetails = document.createElement('h3');
-  headingDetails.classList.add('card-title', 'mb-4', 'text-center');
-  headingDetails.textContent = 'Parking Reservation Details';
+  useEffect(() => {
+    // Save reservationRequests to localStorage whenever it changes
+    localStorage.setItem('reservationRequests', JSON.stringify(reservationRequests));
+  }, [reservationRequests]);
 
-  // Append elements to container
-  card.appendChild(cardBody);
-  container.appendChild(card);
-  container.appendChild(headingDetails);
-  container.appendChild(historyLog);
+  useEffect(() => {
+    // Load history log from localStorage on component mount
+    const storedHistoryLog = JSON.parse(localStorage.getItem('historyLog'));
+    if (storedHistoryLog) {
+      setHistoryLog(storedHistoryLog);
+    }
+  }, []);
+  const handleReservation = (accepted, name, plateNumber, floor, slot, timeOfRequest, index) => {
+    const status = accepted ? 'Accepted' : 'Declined';
 
-  // Append container to body
-  document.body.appendChild(container);
+    // Update history log
+    const logEntry = {
+      status,
+      name,
+      plateNumber,
+      floor,
+      slot,
+      timeOfRequest,
+    };
+
+    setHistoryLog([logEntry, ...historyLog]);
+
+    // Save history log to localStorage
+    localStorage.setItem('historyLog', JSON.stringify([logEntry, ...historyLog]));
+
+    // Remove the request from reservationRequests
+    const updatedRequests = [...reservationRequests];
+    updatedRequests.splice(index, 1);
+    setReservationRequests(updatedRequests);
+
+    // Set selected reservation for details display
+    setSelectedReservation({
+      status,
+      name,
+      plateNumber,
+      floor,
+      slot,
+      timeOfRequest,
+    });
+  };
+
+  const HistoryLog = () => (
+    <div className="history-log mt-4" style={{ maxHeight: '200px', overflowY: 'scroll' }}>
+      {historyLog.map((logEntry, index) => (
+        <div className={`alert ${logEntry.status === 'Accepted' ? 'alert-success' : 'alert-danger'} mt-2`} key={index}>
+          <strong>{logEntry.status}:</strong> {logEntry.name} requested a reservation on {logEntry.timeOfRequest}. Plate Number: {logEntry.plateNumber}, Floor: {logEntry.floor}, Slot: {logEntry.slot}
+        </div>
+      ))}
+    </div>
+  );
+
+  const ReservationRequest = ({ request, index }) => (
+    <div className="reservation-request mb-4 border p-3 rounded bg-light" key={request.plateNumber}>
+      <h4 className="mb-0">Name: {request.name}</h4>
+      <p className="text-muted mb-2">Time of Request: {request.timeOfRequest}</p>
+      <p>Plate Number: {request.plateNumber}</p>
+      <p>Floor Number: {request.floor}</p>
+      <p>Slot Number: {request.slot}</p>
+      <div className="d-flex flex-column align-items-center mt-2">
+        <button className="btn btn-success" onClick={() => handleReservation(true, request.name, request.plateNumber, request.floor, request.slot, request.timeOfRequest, index)}>Accept Reservation</button>
+        <button className="btn btn-danger mt-2" onClick={() => handleReservation(false, request.name, request.plateNumber, request.floor, request.slot, request.timeOfRequest, index)}>Decline Reservation</button>
+      </div>
+    </div>
+  );
+
+  return (
+    <div>
+      <nav className="navbar navbar-dark bg-dark">
+        <div className="container">
+          <a className="navbar-brand" href="ViewSpace">
+            SpotWise Parking Management System
+          </a>
+        </div>
+      </nav>
+      <div className="container mt-5 d-flex flex-column align-items-center justify-content-center">
+        <h2 className="text-center mb-4">Parking Reservation Management</h2>
+        <div className="reservation-requests d-flex flex-column align-items-center mb-4" style={{ width: '300px', height: '400px', overflowY: 'scroll', border: '1px solid #ccc', padding: '10px', background: 'white' }}>
+          {reservationRequests.length === 0 ? (
+            <p>No reservation</p>
+          ) : (
+            reservationRequests.map((request, index) => (
+              <ReservationRequest request={request} index={index} key={request.plateNumber} />
+            ))
+          )}
+        </div>
+        <h3 className="mb-3 mt-4 text-center">Accepted/Declined Reservations</h3>
+        <HistoryLog />
+      </div>
+    </div>
+  );
 };
 
-// Call the function to create the enhanced reservation interface
-createReservationInterface();
+export default ReservationInterface;

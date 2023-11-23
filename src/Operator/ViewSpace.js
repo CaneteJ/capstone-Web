@@ -64,14 +64,14 @@ const ParkingSlot = () => {
       console.error('Error:', error);
     }
   };
-  const navigate = useNavigate();
+ 
+
+  const navigate = useNavigate(); // Get the navigation function from react-router-dom
 
   const handleButtonClick = () => {
-  navigate("/reservation");
- };
-
+    navigate("/reservation"); // Navigate to the reservation page when the button is clicked
+  };
   
-
   const rows = 5;
   const cols = 3;
 
@@ -346,7 +346,7 @@ const ParkingSlot = () => {
     )}
   </div>
 )}
-  </Modal.Body>
+ </Modal.Body>
   <Modal.Footer>
   {recordFound ? null : <div style={{ color: 'red' }}>No record found for this car plate number.</div>}
   </Modal.Footer>
@@ -367,8 +367,8 @@ const ParkingSlot = () => {
     </Modal>
 
     <div style={{ textAlign: 'center', marginTop: '10px' }}>
-      <Button onClick={handleButtonClick}>Manage Reservation</Button>
-    </div>
+  <Button onClick={handleButtonClick}>Manage Reservation</Button>
+</div>
     
       <div style={{textAlign: 'center', fontFamily:'Georgina', fontSize:'15px', marginTop:'10px'}}>
           <span>  Total Parking Spaces: {initialTotalSpaces}</span>
